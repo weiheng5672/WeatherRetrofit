@@ -91,6 +91,17 @@ fun ResultScreen2(
         )
     } ?: emptyList()
 
+    val barEntries = mutableListOf<BarEntry>()
+    var index = 1
+
+    val stationObsTimes = dataResponse.records.location[0].stationObsTimes.stationObsTime
+    for (obsTime in stationObsTimes) {
+        val precipitation = obsTime.weatherElements.Precipitation
+        val precipitationValue = if (precipitation == "T") 0f else precipitation.toFloatOrNull() ?: 0f
+        barEntries.add(BarEntry(index.toFloat(), precipitationValue))
+        index++
+    }
+
     AndroidView(
 
         modifier = Modifier.fillMaxSize(),
@@ -99,10 +110,8 @@ fun ResultScreen2(
             // 创建 BarChart 实例
             val barChart = BarChart(context)
 
-            val barEntriesList = extractDateAndPrecipitation.map { (x,y) -> BarEntry(x,y) }
-
             // 创建 BarDataSet 和 BarData
-            val barDataSet = BarDataSet(barEntriesList, "Bar Chart Data").apply {
+            val barDataSet = BarDataSet(barEntries, "Bar Chart Data").apply {
                 valueTextColor = Color.RED
                 setColor(ContextCompat.getColor(context, R.color.purple_200))
                 valueTextSize = 25f
