@@ -1,8 +1,6 @@
 package com.example.weatherretrofit.ui
 
 import android.graphics.Color
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -83,12 +81,15 @@ fun ResultScreen2(
     modifier: Modifier = Modifier
 ) {
 
+    // 初始化 BarEntries 列表
     val taipeiLocation = dataResponse.records.location.find { it.station.StationNameEN == "TAIPEI" }
 
     val extractDateAndPrecipitation = taipeiLocation?.stationObsTimes?.stationObsTime?.map {
-        Pair(it.Date, it.weatherElements.Precipitation)
+        Pair(
+            it.Date.toFloat(),
+            it.weatherElements.Precipitation.toFloat()
+        )
     } ?: emptyList()
-
 
     AndroidView(
 
@@ -98,19 +99,7 @@ fun ResultScreen2(
             // 创建 BarChart 实例
             val barChart = BarChart(context)
 
-            // 初始化 BarEntries 列表
-            val barEntriesList = ArrayList<BarEntry>().apply {
-                add(BarEntry(1f, 5f))
-                add(BarEntry(2f, 4f))
-                add(BarEntry(3f, 3f))
-                add(BarEntry(4f, 2f))
-                add(BarEntry(5f, 1f))
-                add(BarEntry(6f, 5f))
-                add(BarEntry(7f, 4f))
-                add(BarEntry(8f, 3f))
-                add(BarEntry(9f, 2f))
-                add(BarEntry(10f, 1f))
-            }
+            val barEntriesList = extractDateAndPrecipitation.map { (x,y) -> BarEntry(x,y) }
 
             // 创建 BarDataSet 和 BarData
             val barDataSet = BarDataSet(barEntriesList, "Bar Chart Data").apply {
