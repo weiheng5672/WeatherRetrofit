@@ -1,10 +1,12 @@
-package com.example.weatherretrofit
+package com.example.weatherretrofit.ui
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.weatherretrofit.model.ApiResponse
+import com.example.weatherretrofit.network.Api
 import kotlinx.coroutines.launch
 
 sealed interface UiState {
@@ -30,8 +32,9 @@ class WeatherViewModel: ViewModel() {
     fun getData() {
 
         val authorization = "CWA-176D2330-A1B3-44B5-AF7A-FE13B35413AA"
-        val limit = 10
-        val date ="2024-01-01"
+        val stationID = 466920
+        val timeFrom ="2024-07-01"
+        val timeTo ="2024-07-31"
 
         viewModelScope.launch {
 
@@ -43,11 +46,12 @@ class WeatherViewModel: ViewModel() {
 
                     dataResponse = Api.retrofitService.getData(
                         authorization,
-                        limit.toString(),
-                        date
+                        stationID.toString(),
+                        timeFrom,
+                        timeTo,
                     ),
 
-                )
+                    )
 
             } catch (e: Exception) {
                 UiState.Error

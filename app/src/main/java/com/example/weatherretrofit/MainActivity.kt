@@ -16,13 +16,7 @@ class MainActivity : ComponentActivity() {
 
             WeatherRetrofitTheme {
 
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
-                    WeatherApp(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-
-                }
+                WeatherApp()
 
             }
         }

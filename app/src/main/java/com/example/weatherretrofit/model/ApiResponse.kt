@@ -1,4 +1,4 @@
-package com.example.weatherretrofit
+package com.example.weatherretrofit.model
 
 import kotlinx.serialization.Serializable
 

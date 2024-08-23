@@ -1,5 +1,6 @@
-package com.example.weatherretrofit
+package com.example.weatherretrofit.network
 
+import com.example.weatherretrofit.model.ApiResponse
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -36,8 +37,9 @@ interface ApiService {
     @GET("v1/rest/datastore/C-B0025-001")
     suspend fun getData(
         @Query("Authorization") authorization: String,
-        @Query("limit") limit: String,
-        @Query("Date") date: String,
+        @Query("StationID") stationID: String,
+        @Query("timeFrom") timeFrom: String,
+        @Query("timeTo") timeTo: String,
     ): ApiResponse
 
 }

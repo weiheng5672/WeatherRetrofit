@@ -5,4 +5,7 @@
     <string name="loading">Loading</string>
     <string name="placeholder_success">Placeholder text</string>
     <string name="placeholder_result">Placeholder result text</string>
+    <string name="home_title">繪圖測試</string>
+    <string name="table_title">表格</string>
+    <string name="bar_chart_title">長條圖</string>
 </resources>

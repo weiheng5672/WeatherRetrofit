@@ -53,8 +53,10 @@ android {
 
 dependencies {
 
+    // MPAndroidChart
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
-    //有這行才能在 Compose 直接調用 ViewModel
+    // 有這行才能在 Compose 直接調用 ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
 
     // Retrofit
@@ -76,6 +78,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
