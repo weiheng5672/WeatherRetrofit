@@ -1,7 +1,10 @@
 package com.example.weatherretrofit.ui
 
 import android.graphics.Color
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -35,54 +38,99 @@ fun BarChatScreen(
             )
         }
     ) {
-            innerPadding ->
+        innerPadding ->
 
-        AndroidView(
-
+        ScreenHost(
+            weatherUiState = weatherViewModel.weather_UiState,
+            retryAction = weatherViewModel::getData,
             modifier = Modifier
                 .padding(innerPadding) // Apply the inner padding from Scaffold
-                .fillMaxSize(),
-
-            factory = { context ->
-                // 创建 BarChart 实例
-                val barChart = BarChart(context)
-
-                // 初始化 BarEntries 列表
-                val barEntriesList = ArrayList<BarEntry>().apply {
-                    add(BarEntry(1f, 5f))
-                    add(BarEntry(2f, 4f))
-                    add(BarEntry(3f, 3f))
-                    add(BarEntry(4f, 2f))
-                    add(BarEntry(5f, 1f))
-                    add(BarEntry(6f, 5f))
-                    add(BarEntry(7f, 4f))
-                    add(BarEntry(8f, 3f))
-                    add(BarEntry(9f, 2f))
-                    add(BarEntry(10f, 1f))
-                }
-
-                // 创建 BarDataSet 和 BarData
-                val barDataSet = BarDataSet(barEntriesList, "Bar Chart Data").apply {
-                    valueTextColor = Color.RED
-                    setColor(ContextCompat.getColor(context, R.color.purple_200))
-                    valueTextSize = 25f
-                }
-
-                val barData = BarData(barDataSet)
-
-                // 设置 BarChart 数据和属性
-                barChart.apply {
-                    data = barData
-                    description.isEnabled = false
-                    invalidate() // 刷新图表
-                }
-
-                barChart
-
-            }
+                .fillMaxSize()
         )
 
+    }
+
+}
+
+@Composable
+fun ScreenHost(
+    retryAction: () -> Unit,
+    weatherUiState: UiState,
+    modifier: Modifier = Modifier
+) {
+
+    when (weatherUiState) {
+
+        is UiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
+
+        is UiState.Success -> ResultScreen2(
+            dataResponse = weatherUiState.dataResponse,
+            modifier = modifier.fillMaxWidth(),
+        )
+
+        is UiState.Error -> ErrorScreen(
+            retryAction = retryAction,
+            modifier = modifier.fillMaxSize()
+        )
 
     }
+
+}
+
+@Composable
+fun ResultScreen2(
+    dataResponse: ApiResponse,
+    modifier: Modifier = Modifier
+) {
+
+    val taipeiLocation = dataResponse.records.location.find { it.station.StationNameEN == "TAIPEI" }
+
+    val extractDateAndPrecipitation = taipeiLocation?.stationObsTimes?.stationObsTime?.map {
+        Pair(it.Date, it.weatherElements.Precipitation)
+    } ?: emptyList()
+
+
+    AndroidView(
+
+        modifier = Modifier.fillMaxSize(),
+
+        factory = { context ->
+            // 创建 BarChart 实例
+            val barChart = BarChart(context)
+
+            // 初始化 BarEntries 列表
+            val barEntriesList = ArrayList<BarEntry>().apply {
+                add(BarEntry(1f, 5f))
+                add(BarEntry(2f, 4f))
+                add(BarEntry(3f, 3f))
+                add(BarEntry(4f, 2f))
+                add(BarEntry(5f, 1f))
+                add(BarEntry(6f, 5f))
+                add(BarEntry(7f, 4f))
+                add(BarEntry(8f, 3f))
+                add(BarEntry(9f, 2f))
+                add(BarEntry(10f, 1f))
+            }
+
+            // 创建 BarDataSet 和 BarData
+            val barDataSet = BarDataSet(barEntriesList, "Bar Chart Data").apply {
+                valueTextColor = Color.RED
+                setColor(ContextCompat.getColor(context, R.color.purple_200))
+                valueTextSize = 25f
+            }
+
+            val barData = BarData(barDataSet)
+
+            // 设置 BarChart 数据和属性
+            barChart.apply {
+                data = barData
+                description.isEnabled = false
+                invalidate() // 刷新图表
+            }
+
+            barChart
+
+        }
+    )
 
 }

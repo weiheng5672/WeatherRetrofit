@@ -70,7 +70,7 @@ fun TableHost(
 
         is UiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
 
-        is UiState.Success -> ResultScreen(
+        is UiState.Success -> ResultScreen1(
             dataResponse = weatherUiState.dataResponse,
             modifier = modifier.fillMaxWidth(),
         )
@@ -85,7 +85,7 @@ fun TableHost(
 }
 
 @Composable
-fun ResultScreen(
+fun ResultScreen1(
     dataResponse: ApiResponse,
     modifier: Modifier = Modifier
 ) {
@@ -158,32 +158,5 @@ fun WeatherTable(
     }
 }
 
-@Composable
-fun LoadingScreen(modifier: Modifier = Modifier) {
-    Image(
-        modifier = modifier.size(200.dp),
-        painter = painterResource(R.drawable.loading_img),
-        contentDescription = stringResource(R.string.loading)
-    )
-}
 
-@Composable
-fun ErrorScreen(
-    retryAction: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_connection_error), contentDescription = ""
-        )
-        Text(text = stringResource(R.string.loading_failed), modifier = Modifier.padding(16.dp))
-        Button(onClick = retryAction) {
-            Text(stringResource(R.string.retry))
-        }
-    }
-}
 

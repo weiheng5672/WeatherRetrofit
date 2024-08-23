@@ -48,10 +48,10 @@ class WeatherViewModel: ViewModel() {
                         authorization,
                         stationID.toString(),
                         timeFrom,
-                        timeTo,
-                    ),
-
+                        timeTo
                     )
+
+                )
 
             } catch (e: Exception) {
                 UiState.Error
