@@ -1,30 +1,40 @@
 package com.example.weatherretrofit.ui
 
 import android.graphics.Color
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weatherretrofit.R
 import com.example.weatherretrofit.model.ApiResponse
+import com.example.weatherretrofit.model.StationObsTime
 import com.example.weatherretrofit.navigation.NavigationRoutes
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BarChatScreen(
-    navigateBack: () -> Unit,
-){
+    navigateBack: () -> Unit
+) {
+
     val weatherViewModel: WeatherViewModel = viewModel()
 
     Scaffold(
@@ -35,10 +45,10 @@ fun BarChatScreen(
                 navigateUp = navigateBack
             )
         }
-    ) {
-        innerPadding ->
+    ){
+            innerPadding ->
 
-        ScreenHost(
+        BartChatHost(
             weatherUiState = weatherViewModel.weather_UiState,
             retryAction = weatherViewModel::getData,
             modifier = Modifier
@@ -51,7 +61,7 @@ fun BarChatScreen(
 }
 
 @Composable
-fun ScreenHost(
+fun BartChatHost(
     retryAction: () -> Unit,
     weatherUiState: UiState,
     modifier: Modifier = Modifier
@@ -61,7 +71,7 @@ fun ScreenHost(
 
         is UiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
 
-        is UiState.Success -> ResultScreen2(
+        is UiState.Success -> BarChatResultScreen(
             dataResponse = weatherUiState.dataResponse,
             modifier = modifier.fillMaxWidth(),
         )
@@ -76,30 +86,35 @@ fun ScreenHost(
 }
 
 @Composable
-fun ResultScreen2(
+fun BarChatResultScreen(
     dataResponse: ApiResponse,
     modifier: Modifier = Modifier
 ) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier
+    ) {
 
-    // 初始化 BarEntries 列表
-    val taipeiLocation = dataResponse.records.location.find { it.station.StationNameEN == "TAIPEI" }
+        WeatherBarChat(dataResponse.records.location[0].stationObsTimes.stationObsTime)
 
-    val extractDateAndPrecipitation = taipeiLocation?.stationObsTimes?.stationObsTime?.map {
-        Pair(
-            it.Date.toFloat(),
-            it.weatherElements.Precipitation.toFloat()
-        )
-    } ?: emptyList()
+    }
 
-    val barEntries = mutableListOf<BarEntry>()
-    var index = 1
+}
 
-    val stationObsTimes = dataResponse.records.location[0].stationObsTimes.stationObsTime
-    for (obsTime in stationObsTimes) {
-        val precipitation = obsTime.weatherElements.Precipitation
-        val precipitationValue = if (precipitation == "T") 0f else precipitation.toFloatOrNull() ?: 0f
-        barEntries.add(BarEntry(index.toFloat(), precipitationValue))
-        index++
+@Composable
+fun WeatherBarChat(
+    stationObsTime: List<StationObsTime>
+) {
+
+    // 萃取出Precipitation部分的資料，形成新的List
+    val precipitationList = stationObsTime.map { it.weatherElements.Precipitation }
+
+    val dateList = stationObsTime.map { it.Date }
+
+    // 將字串型態的 Precipitation(降雨量) 的 List 轉換成 Float型態的List
+    // 原字串中的T 代表有下雨但 雨量小於 0.1mm
+    val floatList: List<Float> = precipitationList.map { value ->
+        value.toFloatOrNull() ?: 0f
     }
 
     AndroidView(
@@ -110,11 +125,18 @@ fun ResultScreen2(
             // 创建 BarChart 实例
             val barChart = BarChart(context)
 
+            // 初始化 BarEntries 列表
+            val barEntriesList = ArrayList<BarEntry>().apply {
+                floatList.forEachIndexed { index, value ->
+                    add(BarEntry((index + 1).toFloat(), value))
+                }
+            }
+
             // 创建 BarDataSet 和 BarData
-            val barDataSet = BarDataSet(barEntries, "Bar Chart Data").apply {
+            val barDataSet = BarDataSet(barEntriesList, "Bar Chart Data").apply {
                 valueTextColor = Color.RED
                 setColor(ContextCompat.getColor(context, R.color.purple_200))
-                valueTextSize = 25f
+                valueTextSize = 12f
             }
 
             val barData = BarData(barDataSet)
@@ -123,6 +145,19 @@ fun ResultScreen2(
             barChart.apply {
                 data = barData
                 description.isEnabled = false
+
+                // 设置 X 轴显示日期
+                xAxis.apply {
+                    position = XAxis.XAxisPosition.BOTTOM
+                    setDrawGridLines(false)
+                    valueFormatter = IndexAxisValueFormatter(dateList)
+                    granularity = 1f // 保證標籤一一對應
+                    labelRotationAngle = -90f // 旋轉標籤以避免重疊
+                }
+
+                axisLeft.axisMinimum = 0f
+                axisRight.isEnabled = false
+
                 invalidate() // 刷新图表
             }
 
@@ -130,5 +165,4 @@ fun ResultScreen2(
 
         }
     )
-
 }
