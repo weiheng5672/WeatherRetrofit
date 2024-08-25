@@ -64,6 +64,10 @@ fun BartChatHost(
     modifier: Modifier = Modifier
 ) {
 
+    //UiState類型中 只有 Success 有資料
+    //如果沒有這個 when
+    //編譯器會因為無法確認 weatherUiState 裡面 到底有沒有資料
+    //無法使用 weatherUiState.dataResponse 這樣去存取裡面的資料
     when (weatherUiState) {
 
         is UiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
@@ -92,6 +96,10 @@ fun BarChatResultScreen(
         modifier = modifier
     ) {
 
+        //這裡是關鍵
+        //這一大串東西看著複雜 也是很複雜
+        //總之這一串東西 把原始資料中的 嵌套結構中的某個List 給取出來
+        //台北地區的一個觀測點 七月每天的氣象數據
         WeatherBarChat(dataResponse.records.location[0].stationObsTimes.stationObsTime)
 
     }
@@ -103,6 +111,8 @@ fun WeatherBarChat(
     stationObsTime: List<StationObsTime>
 ) {
 
+    // stationObsTime 是一個 List
+    // 每個元素 代表 每天的氣象數據
     // 萃取出Precipitation部分的資料，形成新的List
     val precipitationList = stationObsTime.map { it.weatherElements.Precipitation }
 
