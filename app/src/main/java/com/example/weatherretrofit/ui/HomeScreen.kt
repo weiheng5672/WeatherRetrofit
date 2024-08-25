@@ -28,8 +28,7 @@ import com.example.weatherretrofit.navigation.NavigationRoutes
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    navigateToBarChart: () -> Unit,
-    navigateToTable: () -> Unit,
+    navigateToBarChart: () -> Unit
 ){
     Scaffold(
         topBar = {
@@ -53,6 +52,8 @@ fun HomeScreen(
 
         ) {
 
+
+
             Button(
                 onClick =  navigateToBarChart
             ) {
@@ -61,13 +62,6 @@ fun HomeScreen(
                 )
             }
 
-            Button(
-                onClick =  navigateToTable
-            ) {
-                Text(
-                    text = stringResource(NavigationRoutes.TableDestination.titleRes)
-                )
-            }
 
         }
 

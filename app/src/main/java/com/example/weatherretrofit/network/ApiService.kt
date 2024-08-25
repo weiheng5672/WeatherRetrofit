@@ -37,7 +37,6 @@ interface ApiService {
     @GET("v1/rest/datastore/C-B0025-001")
     suspend fun getData(
         @Query("Authorization") authorization: String,
-        @Query("StationID") stationID: String,
         @Query("timeFrom") timeFrom: String,
         @Query("timeTo") timeTo: String,
     ): ApiResponse

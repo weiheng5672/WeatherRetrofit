@@ -32,7 +32,6 @@ class WeatherViewModel: ViewModel() {
     fun getData() {
 
         val authorization = "CWA-176D2330-A1B3-44B5-AF7A-FE13B35413AA"
-        val stationID = 466920
         val timeFrom ="2024-07-01"
         val timeTo ="2024-07-31"
 
@@ -46,7 +45,6 @@ class WeatherViewModel: ViewModel() {
 
                     dataResponse = Api.retrofitService.getData(
                         authorization,
-                        stationID.toString(),
                         timeFrom,
                         timeTo
                     )
