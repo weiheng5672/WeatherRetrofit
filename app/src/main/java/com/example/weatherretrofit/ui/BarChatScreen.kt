@@ -124,6 +124,8 @@ fun WeatherBarChat(
     // 萃取出Precipitation部分的資料，形成新的List
     val precipitationList = stationObsTime.map { it.weatherElements.Precipitation }
 
+    val acc = precipitationList.mapNotNull { it.toDoubleOrNull() }.sum()
+
     // 萃取出Date部分的資料 作為x軸的標示
     val dateList = stationObsTime.map { it.Date }
 
@@ -133,6 +135,8 @@ fun WeatherBarChat(
     val floatList: List<Float> = precipitationList.map { value ->
         value.toFloatOrNull() ?: 0f
     }
+
+    Text(text = "月累計雨量:$acc mm")
 
     AndroidView(
 

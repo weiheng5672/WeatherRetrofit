@@ -87,13 +87,20 @@ fun TableResultScreen(
     dataResponse: ApiResponse,
     modifier: Modifier = Modifier
 ) {
+
+    val precipitationList = dataResponse.records.location[0].stationObsTimes.stationObsTime.map { it.weatherElements.Precipitation }
+
+    val acc = precipitationList.mapNotNull { it.toDoubleOrNull() }.sum()
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier
     ) {
-        
+
         Text(text = dataResponse.records.location[0].station.StationName)
+
+        Text(text = "月累計雨量:$acc mm")
 
         WeatherTable(dataResponse.records.location[0].stationObsTimes.stationObsTime)
 
