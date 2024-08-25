@@ -22,6 +22,21 @@ android {
         }
     }
 
+    // 添加 flavor 维度
+    flavorDimensions.add("version")
+
+    // 定义不同的 product flavors
+    productFlavors {
+        create("dev") {
+            dimension = "version"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+        }
+        create("prod") {
+            dimension = "version"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
