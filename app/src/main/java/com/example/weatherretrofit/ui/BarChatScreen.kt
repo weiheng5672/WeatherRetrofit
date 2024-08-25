@@ -116,10 +116,12 @@ fun WeatherBarChat(
     // 萃取出Precipitation部分的資料，形成新的List
     val precipitationList = stationObsTime.map { it.weatherElements.Precipitation }
 
+    // 萃取出Date部分的資料 作為x軸的標示
     val dateList = stationObsTime.map { it.Date }
 
     // 將字串型態的 Precipitation(降雨量) 的 List 轉換成 Float型態的List
     // 原字串中的T 代表有下雨但 雨量小於 0.1mm
+    // 把降雨量從字串轉換成數字 目的是 要使用 MPAndroid 做圖
     val floatList: List<Float> = precipitationList.map { value ->
         value.toFloatOrNull() ?: 0f
     }
@@ -157,7 +159,7 @@ fun WeatherBarChat(
                 xAxis.apply {
                     position = XAxis.XAxisPosition.BOTTOM
                     setDrawGridLines(false)
-                    valueFormatter = IndexAxisValueFormatter(dateList)
+                    valueFormatter = IndexAxisValueFormatter( dateList )
                     granularity = 1f // 保證標籤一一對應
                     labelRotationAngle = -90f // 旋轉標籤以避免重疊
                 }
