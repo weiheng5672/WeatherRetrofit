@@ -1,4 +1,4 @@
-package com.example.weatherretrofit.ui
+package com.example.weatherretrofit
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

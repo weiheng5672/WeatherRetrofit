@@ -5,7 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.weatherretrofit.ui.BarChatScreen
 import com.example.weatherretrofit.ui.HomeScreen
 
 
@@ -23,22 +22,7 @@ fun NavigationGraph(
 
         composable(route = NavigationRoutes.HomeDestination.route) {
 
-            HomeScreen(
-
-                navigateToBarChart = { navController.navigate(NavigationRoutes.BarDestination.route) }
-
-            )
-
-        }
-
-
-        composable(route = NavigationRoutes.BarDestination.route) {
-
-            BarChatScreen(
-
-                navigateBack = { navController.navigate(NavigationRoutes.HomeDestination.route) }
-
-            )
+            HomeScreen()
 
         }
 
