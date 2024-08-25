@@ -8,12 +8,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.weatherretrofit.ErrorScreen
+import com.example.weatherretrofit.InventoryTopAppBar
+import com.example.weatherretrofit.LoadingScreen
 import com.example.weatherretrofit.R
 import com.example.weatherretrofit.model.ApiResponse
 import com.example.weatherretrofit.model.StationObsTime
@@ -92,9 +97,12 @@ fun BarChatResultScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier
     ) {
+
+        Text(text = dataResponse.records.location[0].station.StationName)
 
         //這裡是關鍵
         //這一大串東西看著複雜 也是很複雜

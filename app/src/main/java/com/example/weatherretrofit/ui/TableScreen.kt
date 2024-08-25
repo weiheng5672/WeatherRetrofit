@@ -19,6 +19,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.weatherretrofit.ErrorScreen
+import com.example.weatherretrofit.InventoryTopAppBar
+import com.example.weatherretrofit.LoadingScreen
 import com.example.weatherretrofit.model.ApiResponse
 import com.example.weatherretrofit.model.StationObsTime
 import com.example.weatherretrofit.navigation.NavigationRoutes
@@ -85,9 +88,12 @@ fun TableResultScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier
     ) {
+        
+        Text(text = dataResponse.records.location[0].station.StationName)
 
         WeatherTable(dataResponse.records.location[0].stationObsTimes.stationObsTime)
 
@@ -113,13 +119,17 @@ fun WeatherTable(
             Text(
                 "日期",
                 fontSize = 16.sp,
-                modifier = Modifier.weight(1f).padding(16.dp)
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(16.dp)
             )
 
             Text(
                 "降水量",
                 fontSize = 16.sp,
-                modifier = Modifier.weight(1f).padding(16.dp)
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(16.dp)
             )
         }
 
@@ -136,14 +146,18 @@ fun WeatherTable(
                     Text(
                         text = stationObsTime[index].Date,
                         fontSize = 16.sp,
-                        modifier = Modifier.weight(1f).padding(16.dp)
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(16.dp)
                     )
 
                     // Column 2: Number
                     Text(
                         text = "${stationObsTime[index].weatherElements.Precipitation}mm",
                         fontSize = 16.sp,
-                        modifier = Modifier.weight(1f).padding(16.dp)
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(16.dp)
                     )
 
                 }
