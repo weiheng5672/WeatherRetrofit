@@ -1,5 +1,6 @@
 package com.example.weatherretrofit.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -34,6 +35,7 @@ import com.example.weatherretrofit.navigation.NavigationRoutes
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    navigateToBarChart: (Int) -> Unit,
     weatherViewModel: WeatherViewModel = viewModel()
 ){
 
@@ -51,12 +53,14 @@ fun HomeScreen(
 
             weatherUiState = weatherViewModel.weather_UiState,
 
-            retryAction = weatherViewModel::getData,
+            retryAction = weatherViewModel::getAllData,
 
 
             // 設置內容的內邊距
             // 確保內容不會被 topBar 和 floatingActionButton 遮擋
-            contentPadding = innerPadding
+            contentPadding = innerPadding,
+
+            onItemClick = navigateToBarChart
 
         )
 
@@ -71,6 +75,7 @@ private fun HomeBody(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     retryAction: () -> Unit,
+    onItemClick: (Int) -> Unit,
 
 ) {
 
@@ -82,7 +87,9 @@ private fun HomeBody(
 
             itemList = weatherUiState.dataResponse.records.location,
 
-            contentPadding = contentPadding
+            contentPadding = contentPadding,
+
+            onItemClick = { onItemClick(it.station.StationID.toInt()) },
 
         )
 
@@ -98,6 +105,7 @@ private fun HomeBody(
 @Composable
 private fun PrecipitationList(
     itemList: List<Location>,
+    onItemClick: (Location) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
@@ -107,11 +115,18 @@ private fun PrecipitationList(
         contentPadding = contentPadding
     ) {
 
-        items(items = itemList) { item ->
+        items(
+            items = itemList,
+            key = { it.station.StationID }
+        ) { item ->
 
             PrecipitationItem(
+
                 item = item,
-                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
+
+                modifier = Modifier
+                    .padding(dimensionResource(id = R.dimen.padding_small))
+                    .clickable { onItemClick(item) }
 
             )
 

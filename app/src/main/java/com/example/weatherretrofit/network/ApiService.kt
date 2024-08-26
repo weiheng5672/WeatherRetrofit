@@ -35,8 +35,16 @@ private val retrofit = Retrofit.Builder()
 interface ApiService {
 
     @GET("v1/rest/datastore/C-B0025-001")
-    suspend fun getData(
+    suspend fun getAllData(
         @Query("Authorization") authorization: String,
+        @Query("timeFrom") timeFrom: String,
+        @Query("timeTo") timeTo: String,
+    ): ApiResponse
+
+    @GET("v1/rest/datastore/C-B0025-001")
+    suspend fun getOneData(
+        @Query("Authorization") authorization: String,
+        @Query("StationID") stationID: String,
         @Query("timeFrom") timeFrom: String,
         @Query("timeTo") timeTo: String,
     ): ApiResponse

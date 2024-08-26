@@ -26,10 +26,10 @@ class WeatherViewModel: ViewModel() {
         private set
 
     init {
-        getData()
+        getAllData()
     }
 
-    fun getData() {
+    fun getAllData() {
 
         val authorization = "CWA-176D2330-A1B3-44B5-AF7A-FE13B35413AA"
         val timeFrom ="2024-07-01"
@@ -43,7 +43,7 @@ class WeatherViewModel: ViewModel() {
 
                 UiState.Success(
 
-                    dataResponse = Api.retrofitService.getData(
+                    dataResponse = Api.retrofitService.getAllData(
                         authorization,
                         timeFrom,
                         timeTo

@@ -12,4 +12,12 @@ sealed class NavigationRoutes(
         titleRes = R.string.home_title
     )
 
+    data object BarDestination : NavigationRoutes(
+        route = "bar",
+        titleRes = R.string.bar_chart_title
+    ){
+        const val itemIdArg = "itemId"
+        val routeWithArgs = "$route/{$itemIdArg}"
+    }
+
 }
