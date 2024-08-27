@@ -158,6 +158,7 @@ fun WeatherBarChat(
                 valueTextColor = Color.RED
                 setColor(ContextCompat.getColor(context, R.color.purple_200))
                 valueTextSize = 12f
+                setDrawValues(false) // 隐藏数值标签
             }
 
             val barData = BarData(barDataSet)
